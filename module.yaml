@@ -1,0 +1,10 @@
+product: jvm/app
+
+
+dependencies:
+  - com.squareup:kotlinpoet:1.18.1
+
+
+settings:
+  kotlin:
+    serialization: json
