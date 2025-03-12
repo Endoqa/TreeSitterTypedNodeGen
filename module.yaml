@@ -8,3 +8,5 @@ dependencies:
 settings:
   kotlin:
     serialization: json
+    freeCompilerArgs:
+      - -Xcontext-receivers
