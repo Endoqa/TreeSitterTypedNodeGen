@@ -23,11 +23,9 @@ fun generateNodeChildren(node: Node, children: InternalNode, clazz: TypeSpec.Bui
     file.addType(childrenType.build())
 
     var childrenPropertyType: TypeName = childrenClassName
-
     if (children.multiple) {
         childrenPropertyType = ClassName("kotlin.collections", "List").parameterizedBy(childrenPropertyType)
     }
-
     if (!children.required) {
         childrenPropertyType = childrenPropertyType.copy(nullable = true)
     }
@@ -55,7 +53,24 @@ fun generateNodeChildren(node: Node, children: InternalNode, clazz: TypeSpec.Bui
 
         clazz.addFunction(childrenFunction.build())
     } else {
-        TODO("implement use getNamedChild")
+        val getCB = CodeBlock.builder()
+            .add("return %T(", childrenClassName)
+            .add(
+                "%N.getChild(0u) ?: error(%S)",
+                NodeMemberName,
+                "no child found for ${node.type.name}"
+            )
+            .add(")")
+            .build()
+
+        cb.add(getCB)
+
+        val childrenFunction = FunSpec.builder("children")
+            .returns(childrenPropertyType)
+            .addCode(cb.build())
+
+        clazz.addFunction(childrenFunction.build())
+
     }
 
 }

@@ -5,15 +5,15 @@ import java.nio.file.Path
 
 fun main(args: Array<String>) {
 
-    val nodeTypes: NodeTypes = Json.decodeFromString(File("node_types_tests/json-node-types.json").readText())
+    val nodeTypes: NodeTypes = Json.decodeFromString(File("node_types_tests/webidl-node-types.json").readText())
 
 
     println(nodeTypes)
 
-    val context = GenerateContext(nodeTypes, "Json", "tree_sitter.json.node")
+    val context = GenerateContext(nodeTypes, "IDL", "tree_sitter.idl.node")
 
     generate(context)
 
 
-    context.build(Path.of("examples", "json-nodes", "src"))
+    context.build(Path.of("examples", "webidl-nodes", "src"))
 }

@@ -20,7 +20,7 @@ fun generateCreateNode(): FileSpec.Builder {
         .addStatement("error(%S)", "Node is unnamed")
         .endControlFlow()
 
-    cb.beginControlFlow("return when (%N.%N)", "node", "symbol")
+    cb.beginControlFlow("return when (%N.%N)", "node", "kindIDZ")
 
     nodes
         .filter { it.named }

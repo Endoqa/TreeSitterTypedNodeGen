@@ -23,6 +23,11 @@ fun Node.resolveSuperclass(): List<ClassName> {
     )
 
 
+    parent.addAll(
+        resolveFromField()
+    )
+
+
     return parent
 }
 
@@ -35,4 +40,14 @@ private fun Node.resolveFromSubtypes(): List<Node> {
 context(GenerateContext)
 private fun Node.resolveFromChildren(): List<Node> {
     return nodes.filter { n -> n.children?.types?.any { it.type == type } ?: false }
+}
+
+context(GenerateContext)
+private fun Node.resolveFromField(): List<ClassName> {
+    return nodes.flatMap { n ->
+        val possibleFields = n.fields.filter { (fieldName, field) ->
+            field.types.any { it.type == type }
+        }
+        possibleFields.map { (fieldName, _) -> n.type.fieldClassName(fieldName) }
+    }
 }

@@ -6,6 +6,9 @@ dependencies:
 
 
 settings:
+  jvm:
+    release: 22
+
   kotlin:
     serialization: json
     freeCompilerArgs:

@@ -38,7 +38,7 @@ fun generateLanguage(languageID: String = language.lowercase()): FileSpec.Builde
             val property = PropertySpec.builder(node.type.name, UShort::class)
                 .initializer(
                     CodeBlock.of(
-                        "%N.getSymbolForName(%S, %L)",
+                        "%N.idForNodeKind(%S, %L)",
                         LanguageMemberName,
                         node.type.name,
                         true

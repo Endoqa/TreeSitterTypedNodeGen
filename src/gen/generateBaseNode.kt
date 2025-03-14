@@ -1,7 +1,10 @@
 package gen
 
 import GenerateContext
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 
 context(GenerateContext)
 fun generateBaseNode(): FileSpec.Builder {

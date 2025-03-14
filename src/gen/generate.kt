@@ -16,6 +16,7 @@ fun generate(context: GenerateContext) {
         addSource(generateBaseNode())
         addSource(generateLanguage())
         addSource(generateCreateNode())
+        addSource(generateUtils())
         context.nodes
             .filter { it.named }
             .forEach { generateNode(it) }
@@ -80,7 +81,10 @@ fun generateNode(node: Node) {
         spec.addType(companion.build())
     }
 
-
+    if (node.fields.isNotEmpty()) {
+        require(node.subtypes.isEmpty()) { "Node ${node.type.name} has fields but is also a subtype" }
+        generateFields(node, node.fields, spec, source)
+    }
 
 
     source.addType(spec.build())

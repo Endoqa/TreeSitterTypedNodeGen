@@ -19,6 +19,7 @@ data class Node(
     override val type: Name,
     override val named: Boolean,
     val root: Boolean = false,
+    val extra: Boolean = false,
     val subtypes: List<Subtype> = emptyList(),
     val fields: Map<String, InternalNode> = emptyMap(),
     val children: InternalNode? = null

@@ -20,6 +20,8 @@ value class Name(val name: String) {
     val childrenClassName
         get() = ClassName(packageName, "${name.pascal()}NodeChildren")
 
+    context(GenerateContext)
+    fun fieldClassName(fieldName: String) = ClassName(packageName, "${name.pascal()}Node${fieldName.pascal()}")
 
     override fun toString(): String {
         return name
