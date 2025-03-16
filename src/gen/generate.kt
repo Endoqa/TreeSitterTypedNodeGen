@@ -2,10 +2,7 @@ package gen
 
 import GenerateContext
 import Node
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import resolve.resolveSuperclass
 
 
@@ -31,36 +28,18 @@ fun generateNode(node: Node) {
     val isSealed = node.subtypes.isNotEmpty()
 
 
-    val spec: TypeSpec.Builder
+    val spec: TypeSpec.Builder = TypeSpec.classBuilder(node.type.className)
 
     if (isSealed) {
-        spec = TypeSpec.interfaceBuilder(node.type.className)
         spec.addModifiers(KModifier.SEALED)
-    } else {
-        spec = TypeSpec.classBuilder(node.type.className)
     }
 
-    spec.addSuperinterface(TSBaseNode)
+    spec.inheritBaseNode()
+    spec.addBaseNodeInitializer()
 
     val superInterfaces = node.resolveSuperclass()
 
     spec.addSuperinterfaces(superInterfaces)
-
-    if (!isSealed) {
-        spec
-            .primaryConstructor(
-                FunSpec.constructorBuilder()
-                    .addParameter(NodeMemberName, tree_sitter.Node)
-                    .build()
-            )
-
-            .addProperty(
-                PropertySpec.builder(NodeMemberName, tree_sitter.Node)
-                    .initializer(NodeMemberName)
-                    .addModifiers(KModifier.OVERRIDE)
-                    .build()
-            )
-    }
 
 
 
@@ -88,4 +67,25 @@ fun generateNode(node: Node) {
 
 
     source.addType(spec.build())
+}
+
+context(GenerateContext)
+fun TypeSpec.Builder.inheritBaseNode(): TypeSpec.Builder {
+    return this.addSuperinterface(TSBaseNode)
+}
+
+context(GenerateContext)
+fun TypeSpec.Builder.addBaseNodeInitializer(): TypeSpec.Builder {
+    return this.primaryConstructor(
+        FunSpec.constructorBuilder()
+            .addParameter(NodeMemberName, tree_sitter.Node)
+            .build()
+    )
+
+        .addProperty(
+            PropertySpec.builder(NodeMemberName, tree_sitter.Node)
+                .initializer(NodeMemberName)
+                .addModifiers(KModifier.OVERRIDE)
+                .build()
+        )
 }

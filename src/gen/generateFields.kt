@@ -26,7 +26,7 @@ fun generateField(node: Node, fieldName: String, field: InternalNode, clazz: Typ
 
     if (!shouldInline) {
         val fieldClazz = TypeSpec.interfaceBuilder(fieldClassName)
-            .addSuperinterface(TSBaseNode)
+            .inheritBaseNode()
             .addModifiers(KModifier.SEALED)
 
         val companion = TypeSpec.companionObjectBuilder()

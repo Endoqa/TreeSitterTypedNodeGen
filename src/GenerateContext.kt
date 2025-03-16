@@ -29,7 +29,6 @@ class GenerateContext(
         val tree_sitter = lib_tree_sitter_namespace
     }
 
-    //    context(GenerateContext)
     class utils_namespace(private val packageName: String) {
         val useCursor = MemberName(packageName, "useCursor")
     }

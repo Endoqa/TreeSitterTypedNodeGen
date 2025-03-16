@@ -12,7 +12,7 @@ fun generateNodeChildren(node: Node, children: InternalNode, clazz: TypeSpec.Bui
     val childrenClassName = node.type.childrenClassName
 
     val childrenType = TypeSpec.interfaceBuilder(childrenClassName)
-        .addSuperinterface(TSBaseNode)
+        .inheritBaseNode()
         .addModifiers(KModifier.SEALED)
 
     val companion = TypeSpec.companionObjectBuilder()
