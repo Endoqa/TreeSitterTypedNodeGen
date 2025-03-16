@@ -19,7 +19,12 @@ fun generateField(node: Node, fieldName: String, field: InternalNode, clazz: Typ
     val shouldInline = field.types.size == 1
 
     val fieldClassName = if (shouldInline) {
-        field.types.first().type.className
+        val inlineNode = field.types.first()
+        if (inlineNode.named) {
+            inlineNode.type.className
+        } else {
+            UnnamedNode
+        }
     } else {
         node.type.fieldClassName(fieldName)
     }
