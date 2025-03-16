@@ -6,6 +6,12 @@ import com.squareup.kotlinpoet.ClassName
 
 context(GenerateContext)
 fun Node.resolveSuperclass(): List<ClassName> {
+
+
+    if (extra) {
+        return allChildrenTypes()
+    }
+
     val parent = mutableListOf<ClassName>()
 
     parent.addAll(
@@ -32,6 +38,17 @@ fun Node.resolveSuperclass(): List<ClassName> {
 }
 
 context(GenerateContext)
+private fun allChildrenTypes(): List<ClassName> {
+    return nodes.mapNotNull { n ->
+        if (n.children == null) {
+            null
+        } else {
+            n.type.childrenClassName
+        }
+    }
+}
+
+context(GenerateContext)
 private fun Node.resolveFromSubtypes(): List<Node> {
     return nodes.filter { n -> n.subtypes.any { it.type == type } }
 }
@@ -48,6 +65,13 @@ private fun Node.resolveFromField(): List<ClassName> {
         val possibleFields = n.fields.filter { (fieldName, field) ->
             field.types.any { it.type == type }
         }
-        possibleFields.map { (fieldName, _) -> n.type.fieldClassName(fieldName) }
+        possibleFields.mapNotNull { (fieldName, f) ->
+            if (f.types.size == 1) {
+               null
+            } else {
+                n.type.fieldClassName(fieldName)
+            }
+//            n.type.fieldClassName(fieldName)
+        }
     }
 }

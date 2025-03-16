@@ -1,10 +1,8 @@
 package gen
 
 import GenerateContext
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
+import Node
+import com.squareup.kotlinpoet.*
 
 context(GenerateContext)
 fun generateBaseNode(): FileSpec.Builder {
@@ -23,6 +21,27 @@ fun generateBaseNode(): FileSpec.Builder {
                 .build()
         )
 
+    // example
+    //     class Unnamed(
+    //        override val `$node`: Node
+    //    ) : IDLTSBaseNode
+    baseType.addType(
+        TypeSpec.classBuilder("Unnamed")
+            .addSuperinterface(TSBaseNode)
+            .addProperty(
+                PropertySpec
+                    .builder(NodeMemberName, tree_sitter.Node)
+                    .addModifiers(KModifier.OVERRIDE)
+                    .initializer(NodeMemberName)
+                    .build()
+            )
+            .primaryConstructor(
+                FunSpec.constructorBuilder()
+                    .addParameter(NodeMemberName, tree_sitter.Node)
+                    .build()
+            )
+            .build()
+    )
 
 
 

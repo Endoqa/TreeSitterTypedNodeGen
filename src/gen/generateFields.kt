@@ -16,17 +16,25 @@ fun generateFields(node: Node, fields: Map<String, InternalNode>, clazz: TypeSpe
 
 context(GenerateContext)
 fun generateField(node: Node, fieldName: String, field: InternalNode, clazz: TypeSpec.Builder, file: FileSpec.Builder) {
-    val fieldClassName = node.type.fieldClassName(fieldName)
+    val shouldInline = field.types.size == 1
 
-    val fieldClazz = TypeSpec.interfaceBuilder(fieldClassName)
-        .addSuperinterface(TSBaseNode)
-        .addModifiers(KModifier.SEALED)
+    val fieldClassName = if (shouldInline) {
+        field.types.first().type.className
+    } else {
+        node.type.fieldClassName(fieldName)
+    }
 
-    val companion = TypeSpec.companionObjectBuilder()
-    companion.addFunction(generateInvokeWrapper(fieldClassName).build())
-    fieldClazz.addType(companion.build())
+    if (!shouldInline) {
+        val fieldClazz = TypeSpec.interfaceBuilder(fieldClassName)
+            .addSuperinterface(TSBaseNode)
+            .addModifiers(KModifier.SEALED)
 
-    file.addType(fieldClazz.build())
+        val companion = TypeSpec.companionObjectBuilder()
+        companion.addFunction(generateInvokeWrapper(fieldClassName).build())
+        fieldClazz.addType(companion.build())
+
+        file.addType(fieldClazz.build())
+    }
 
     var fieldPropertyType: TypeName = fieldClassName
     if (field.multiple) {
@@ -74,7 +82,7 @@ fun generateField(node: Node, fieldName: String, field: InternalNode, clazz: Typ
                 .build()
         } else {
             cb = CodeBlock.builder()
-                .add("(%L)?.let(%T::invoke)", cb, fieldClassName)
+                .add("(%L)?.let { %T(it) }", cb, fieldClassName)
                 .build()
         }
 

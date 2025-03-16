@@ -7,6 +7,6 @@ repositories:
   - https://maven.endoqa.io
 
 dependencies:
-  - io.endoqa:libtree_sitter:0.0.5
-  - io.endoqa:tree-sitter:0.0.5
+  - io.endoqa:libtree_sitter:0.0.6
+  - io.endoqa:tree-sitter:0.0.6
 

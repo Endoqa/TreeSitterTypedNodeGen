@@ -17,10 +17,10 @@ fun generateCreateNode(): FileSpec.Builder {
     val cb = CodeBlock.builder()
 
     cb.beginControlFlow("if (!%N.%N)", "node", "isNamed")
-        .addStatement("error(%S)", "Node is unnamed")
+        .addStatement("return %T(node)", UnnamedNode)
         .endControlFlow()
 
-    cb.beginControlFlow("return when (%N.%N)", "node", "kindIDZ")
+    cb.beginControlFlow("return when (%N.%N)", "node", "kindID")
 
     nodes
         .filter { it.named }
