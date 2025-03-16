@@ -2,6 +2,7 @@ package gen
 
 import GenerateContext
 import com.squareup.kotlinpoet.*
+import resolve.resolveUnnamedSuperclasses
 
 context(GenerateContext)
 fun generateBaseNode(): FileSpec.Builder {
@@ -19,6 +20,7 @@ fun generateBaseNode(): FileSpec.Builder {
         TypeSpec.classBuilder("Unnamed")
             .inheritBaseNode()
             .addBaseNodeInitializer()
+            .addSuperinterfaces(resolveUnnamedSuperclasses())
             .build()
     )
 

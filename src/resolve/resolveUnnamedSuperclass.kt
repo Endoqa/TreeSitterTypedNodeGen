@@ -1,16 +1,12 @@
 package resolve
 
+
 import GenerateContext
 import Node
 import com.squareup.kotlinpoet.ClassName
 
 context(GenerateContext)
-fun Node.resolveSuperclass(): List<ClassName> {
-
-
-    if (extra) { //TODO: maybe not?
-        return allChildrenTypes()
-    }
+fun resolveUnnamedSuperclasses(): List<ClassName> {
 
     val parent = mutableListOf<ClassName>()
 
@@ -38,36 +34,25 @@ fun Node.resolveSuperclass(): List<ClassName> {
 }
 
 context(GenerateContext)
-private fun allChildrenTypes(): List<ClassName> {
-    return nodes.mapNotNull { n ->
-        if (n.children == null) {
-            null
-        } else {
-            n.type.childrenClassName
-        }
-    }
-}
-
-context(GenerateContext)
-private fun Node.resolveFromSubtypes(): List<Node> {
-    return nodes.filter { n -> n.subtypes.any { it.type == type } }
+private fun resolveFromSubtypes(): List<Node> {
+    return nodes.filter { n -> n.subtypes.any { !it.named } }
 }
 
 
 context(GenerateContext)
-private fun Node.resolveFromChildren(): List<Node> {
-    return nodes.filter { n -> n.children?.types?.any { it.type == type } ?: false }
+private fun resolveFromChildren(): List<Node> {
+    return nodes.filter { n -> n.children?.types?.any { !it.named } ?: false }
 }
 
 context(GenerateContext)
-private fun Node.resolveFromField(): List<ClassName> {
+private fun resolveFromField(): List<ClassName> {
     return nodes.flatMap { n ->
         val possibleFields = n.fields.filter { (fieldName, field) ->
-            field.types.any { it.type == type }
+            field.types.any { !it.named }
         }
         possibleFields.mapNotNull { (fieldName, f) ->
             if (f.types.size == 1) {
-               null
+                null
             } else {
                 n.type.fieldClassName(fieldName)
             }
