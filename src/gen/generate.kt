@@ -28,14 +28,18 @@ fun generateNode(node: Node) {
     val isSealed = node.subtypes.isNotEmpty()
 
 
-    val spec: TypeSpec.Builder = TypeSpec.classBuilder(node.type.className)
+    val spec: TypeSpec.Builder
 
     if (isSealed) {
+        spec = TypeSpec.interfaceBuilder(node.type.className)
         spec.addModifiers(KModifier.SEALED)
+    } else {
+        spec = TypeSpec.classBuilder(node.type.className)
+        spec.addBaseNodeInitializer()
     }
 
     spec.inheritBaseNode()
-    spec.addBaseNodeInitializer()
+
 
     val superInterfaces = node.resolveSuperclass()
 
