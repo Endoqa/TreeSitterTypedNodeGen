@@ -7,6 +7,7 @@ class GenerateContext(
     val nodes: NodeTypes,
     val language: String,
     val packageName: String,
+    val shorthand: String = language
 ) {
 
     val NodeMemberName = "\$node"
@@ -39,8 +40,8 @@ class GenerateContext(
     val utils = utils_namespace(packageName)
 
 
-    val TSBaseNode = ClassName(packageName, "${language}TSBaseNode")
-    val TSLanguage = ClassName(packageName, "TS${language}Language")
+    val TSBaseNode = ClassName(packageName, "${shorthand}NodeBase")
+    val TSLanguage = ClassName(packageName, "TS${shorthand}Language")
     val UnnamedNode = TSBaseNode.nestedClass("Unnamed")
 
     private val sources = mutableListOf<FileSpec.Builder>()

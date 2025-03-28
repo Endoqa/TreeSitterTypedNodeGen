@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
 
     println(nodeTypes)
 
-    val context = GenerateContext(nodeTypes, "IDL", "tree_sitter.idl.node")
+    val context = GenerateContext(nodeTypes, "webidl", "tree_sitter.idl.node", "IDL")
 
     generate(context)
 
