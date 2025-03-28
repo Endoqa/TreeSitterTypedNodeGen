@@ -3,6 +3,7 @@ product: jvm/app
 
 dependencies:
   - com.squareup:kotlinpoet:1.18.1
+  - com.github.ajalt.clikt:clikt:5.0.1
 
 
 settings:
